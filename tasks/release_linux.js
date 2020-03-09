@@ -72,6 +72,9 @@ var packToDebFile = function () {
     });
     packDir.write('DEBIAN/control', control);
 
+    // Do not package the devDependencies for production
+    childProcess.execSync('cd ' + packDir.path() + '/opt/OnlyKey; npm prune --production;');
+    
     // Build the package...
     childProcess.exec('fakeroot dpkg-deb -Zxz --build ' + packDir.path() + ' ' + debPath,
         function (error, stdout, stderr) {
